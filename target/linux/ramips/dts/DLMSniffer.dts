@@ -95,7 +95,7 @@
 &pinctrl {
 	state_default: pinctrl0 {
 		gpio {
-			ralink,group = "gpio", "wdt";
+			ralink,group = "gpio", "wdt", "p4led_an", "p3led_an", "p2led_an", "p1led_an", "p0led_an", "i2c", "i2s", "pwm0", "pwm1", "spi cs1", "sdmode", "spis", "refclk", "perst";
 			ralink,function = "gpio";
 		};
 	};
@@ -109,16 +109,14 @@
 	status = "okay";
 };
 
+&wmac {
+        status = "okay";
+};
+
 &ethernet {
-	mtd-mac-address = <&factory 0x4>;
-	mtd-mac-address-increment = <(-1)>;
+	status = "disabled";
 };
 
 &esw {
-	mediatek,portmap = <0x2f>;
-	mediatek,portdisable = <0x2a>;
-};
-
-&wmac {
-	status = "okay";
+	status = "disabled";
 };
