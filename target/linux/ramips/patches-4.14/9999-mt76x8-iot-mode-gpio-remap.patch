@@ -1,0 +1,18 @@
+--- a/arch/mips/ralink/mt7620.c
++++ b/arch/mips/ralink/mt7620.c
+@@ -584,6 +584,15 @@ void __init ralink_clk_init(void)
+ 
+ 		rt_sysc_w32(val, SYSC_REG_CPU_SYS_CLKCFG);
+ 	}
++
++	if (is_mt76x8()) {
++		u32 val = rt_sysc_r32(SYSC_REG_CPU_SYS_CLKCFG);
++
++		//DISABLE EPHY P1 ~ P4
++		val |= ((0x1f << 16) | (0x1f << 0));
++
++		rt_sysc_w32(val, SYSC_REG_CPU_SYS_CLKCFG);
++	}
+ }
+ 
+ void __init ralink_of_remap(void)
