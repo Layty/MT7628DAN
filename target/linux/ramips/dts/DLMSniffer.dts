@@ -20,8 +20,8 @@
 	};
 
 	aliases {
-		led-boot = &led0;
-		led-running = &led1;
+		led-boot = &led2;
+		led-running = &led2;
 		led-failsafe = &led2;
 		led-upgrade = &led2;
 	};
