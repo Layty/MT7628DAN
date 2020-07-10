@@ -1,0 +1,30 @@
+--- /dev/null
++++ b/Makefile
+@@ -0,0 +1,27 @@
++SRC_DIR := ./development/src
++SRC := $(wildcard $(SRC_DIR)/*.cpp)
++OBJ := $(SRC:$(SRC_DIR)/%.cpp=$(SRC_DIR)/%.o)
++
++CXX      = g++
++CC       = gcc
++RM       = rm -f
++
++LIBS     = -static-libgcc -s -lpthread -lrt
++INCS     = -I"./development/include"
++BIN      = libDLMS.so
++CFLAGS   = $(INCS) -Os -Wall -fPIC
++
++
++.PHONY: all all-before all-after clean clean-custom
++
++all: all-before $(BIN) all-after
++
++clean: clean-custom
++	${RM} $(OBJ) $(BIN)
++
++$(BIN): $(OBJ)
++	$(CXX) -shared $(OBJ) -o $(BIN) $(LIBS)
++
++$(SRC_DIR)/%.o: $(SRC_DIR)/%.cpp
++	@echo + CXX $<
++	@$(CXX) -c -o $@ $< $(CFLAGS)
