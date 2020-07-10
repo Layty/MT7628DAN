@@ -16,7 +16,7 @@ PKG_MIRROR_HASH:=
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/Gurux/Gurux.DLMS.cpp.git
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_SOURCE_VERSION:=a1f718510fc715268664ca9e56790e265b92a57c
 
 PKG_LICENSE:=GPL
 PKG_LICENSE_FILES:=LICENSE
@@ -26,7 +26,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/libDLMS
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+USE_GLIBC:librt +libpthread $(CXX_DEPENDS)
+  DEPENDS:=+USE_GLIBC:librt +libstdcpp +libpthread
   TITLE:=A DLMS protocol stack.
   URL:=http://gurux.fi/
   ABI_VERSION:=1
@@ -42,11 +42,13 @@ endef
 define Build/Compile
 	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
 		CC="$(TARGET_CROSS)gcc" \
-		CXX="$(TARGET_CROSS)g++" \
+		CXX="$(TARGET_CROSS)g++"
 endef
 
 define Package/libDLMS/install
-	$(CP) $(PKG_BUILD_DIR)/libDLMS.so.* $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_BUILD_DIR)/*.so $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,libDLMS))
+
