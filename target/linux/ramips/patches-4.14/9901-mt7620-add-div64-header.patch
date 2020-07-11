@@ -1,0 +1,10 @@
+--- a/arch/mips/ralink/mt7620.c
++++ b/arch/mips/ralink/mt7620.c
+@@ -15,6 +15,7 @@
+ #include <linux/bug.h>
+ 
+ #include <asm/mipsregs.h>
++#include <asm/div64.h>
+ #include <asm/mach-ralink/ralink_regs.h>
+ #include <asm/mach-ralink/mt7620.h>
+ #include <asm/mach-ralink/pinmux.h>
