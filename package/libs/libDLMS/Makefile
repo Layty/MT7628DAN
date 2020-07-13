@@ -27,13 +27,13 @@ define Package/libDLMS
   SECTION:=libs
   CATEGORY:=Libraries
   DEPENDS:=+USE_GLIBC:librt +libstdcpp +libpthread
-  TITLE:=A DLMS protocol stack.
+  TITLE:=A DLMS protocol stack
   URL:=http://gurux.fi/
   ABI_VERSION:=1
 endef
 
 define Package/libDLMS/description
- A DLMS protocol stack.
+ An open-source DLMS protocol stack.
 endef
 
 define Build/Configure
