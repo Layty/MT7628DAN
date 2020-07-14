@@ -13,11 +13,11 @@ platform_check_image() {
 }
 
 platform_pre_upgrade() {
-
+	return 0
 }
 
 platform_nand_pre_upgrade() {
-
+	return 0
 }
 
 platform_do_upgrade() {
