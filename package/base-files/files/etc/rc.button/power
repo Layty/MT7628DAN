@@ -1,7 +1,9 @@
 #!/bin/sh
 
-[ "${ACTION}" = "released" ] || exit 0
+[ "${ACTION}" = "pressed" ] || exit 0
 
+/sbin/wifi down
+/bin/sync
 exec /sbin/poweroff
 
 return 0

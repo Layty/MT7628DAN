@@ -1,0 +1,14 @@
+#!/bin/sh
+
+#set pin
+
+case "$ACTION" in
+pressed)
+	return 0
+;;
+released)
+	return 0
+;;
+esac
+
+return 0
