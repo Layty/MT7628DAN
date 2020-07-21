@@ -123,6 +123,8 @@ define Package/blockd/install
 	$(INSTALL_DIR) $(1)/sbin $(1)/etc/init.d/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/blockd $(1)/sbin/
 	$(INSTALL_BIN) ./files/blockd.init $(1)/etc/init.d/blockd
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_BIN) ./files/fstab $(1)/etc/config
 endef
 
 define Build/InstallDev
