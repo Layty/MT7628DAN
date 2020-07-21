@@ -114,8 +114,6 @@ define Package/block-mount/install
 
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/block $(1)/sbin/
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/libblkid-tiny.so $(1)/lib/
-	$(LN) ../../sbin/block $(1)/usr/sbin/swapon
-	$(LN) ../../sbin/block $(1)/usr/sbin/swapoff
 
 endef
 
@@ -124,7 +122,7 @@ define Package/blockd/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/blockd $(1)/sbin/
 	$(INSTALL_BIN) ./files/blockd.init $(1)/etc/init.d/blockd
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_BIN) ./files/fstab $(1)/etc/config
+	$(INSTALL_CONF) ./files/fstab $(1)/etc/config
 endef
 
 define Build/InstallDev
