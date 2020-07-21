@@ -1,7 +1,5 @@
 #!/bin/sh
 
-#event pin
-
 case "$ACTION" in
 pressed)
 	return 0
