@@ -43,11 +43,22 @@ define Build/Compile
 	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
 		CC="$(TARGET_CROSS)gcc" \
 		CXX="$(TARGET_CROSS)g++"
+	mkdir -p $(PKG_INSTALL_DIR)/usr/include/dlms/include
+	$(CP) $(PKG_BUILD_DIR)/development/include/* $(PKG_INSTALL_DIR)/usr/include/dlms/include
+	mkdir -p $(PKG_INSTALL_DIR)/usr/lib
+	$(CP) $(PKG_BUILD_DIR)/*.so $(PKG_INSTALL_DIR)/usr/lib/
+endef
+
+define Build/InstallDev
+	mkdir -p $(1)/usr/include/dlms/include
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/dlms/include/* $(1)/usr/include/dlms/include
+	mkdir -p $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so $(1)/usr/lib/
 endef
 
 define Package/libDLMS/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_BUILD_DIR)/*.so $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,libDLMS))
