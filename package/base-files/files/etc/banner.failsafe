@@ -6,10 +6,5 @@ special commands:
 after mount_root:
 * passwd			 change root's password
 * /etc/config		    directory with config files
-
-for more help see:
-https://openwrt.org/docs/guide-user/troubleshooting/
-- failsafe_and_factory_reset
-- root_password_reset
 =======================================================
 
