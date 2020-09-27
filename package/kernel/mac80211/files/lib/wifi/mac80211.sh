@@ -113,6 +113,8 @@ detect_mac80211() {
 			set wireless.radio${devidx}.hwmode=11${mode_band}
 			${dev_id}
 			${ht_capab}
+			set wireless.radio${devidx}.country=CN
+			set wireless.radio${devidx}.txpower=0
 			set wireless.radio${devidx}.disabled=0
 
 			set wireless.default_radio${devidx}=wifi-iface
