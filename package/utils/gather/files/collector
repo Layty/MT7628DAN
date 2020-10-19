@@ -1,0 +1,21 @@
+
+config globals 'globals'
+	option enable '1'
+	option period '5'
+	option client '16'
+	option logical '0001'
+	option physical '0017'
+	option mode '4' 
+	option level 'none'
+	option password '3030303030303030'
+	option ekey '30303030303030303030303030303030'
+	option akey '30303030303030303030303030303030'
+
+
+config element
+	option name 'clock'
+	option class '8'
+	option obis '0.0.1.0.0.255'
+	option index '2'
+	option delta '1'
+
