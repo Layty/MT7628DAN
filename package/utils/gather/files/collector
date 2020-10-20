@@ -1,6 +1,6 @@
 
 config globals 'globals'
-	option enable '1'
+	option enabled '1'
 	option period '5'
 	option client '16'
 	option logical '0001'
