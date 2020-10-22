@@ -1,0 +1,43 @@
+--- a/development/include/GXDLMSClient.h
++++ b/development/include/GXDLMSClient.h
+@@ -524,6 +524,25 @@ public:
+         std::vector<CGXByteBuffer>& reply);
+ 
+     /**
++    * Generates a read message.
++    *
++    * @param pObject
++    *            COSEM object to write.
++    * @param attributeOrdinal
++    *            Attribute index of the object.
++    * @param data
++    *            Read data parameter.
++    * @param reply
++    *            Generated read message(s).
++    * Returns error status.
++    */
++    int Read(
++        CGXDLMSObject* pObject,
++        int attributeOrdinal,
++        CGXByteBuffer* data,
++        std::vector<CGXByteBuffer>& reply);
++
++    /**
+     * Read list of COSEM objects.
+     *
+     * @param list
+--- a/development/src/GXDLMSClient.cpp
++++ b/development/src/GXDLMSClient.cpp
+@@ -1222,6 +1222,12 @@ int CGXDLMSClient::Read(CGXDLMSVariant&
+     return Read(name, objectType, attributeOrdinal, NULL, reply);
+ }
+ 
++int CGXDLMSClient::Read(CGXDLMSObject* pObject, int attributeOrdinal, CGXByteBuffer* data, std::vector<CGXByteBuffer>& reply)
++{
++    CGXDLMSVariant name = pObject->GetName();
++    return Read(name, pObject->GetObjectType(), attributeOrdinal, data, reply);
++}
++
+ int CGXDLMSClient::Read(CGXDLMSVariant& name, DLMS_OBJECT_TYPE objectType, int attributeOrdinal, CGXByteBuffer* data,
+     std::vector<CGXByteBuffer>& reply)
+ {
