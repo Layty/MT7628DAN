@@ -1,0 +1,32 @@
+--- a/block.c
++++ b/block.c
+@@ -893,8 +893,9 @@ static int handle_mount(const char *sour
+ 	size_t mount_opts_len;
+ 	char *mount_opts = NULL, *ptr;
+ 
+-	err = mount(source, target, fstype, m ? m->flags : 0,
+-	            (m && m->options) ? m->options : "");
++	err = mount(source, target, fstype, 
++		m ? (m->flags | (MS_SYNCHRONOUS | MS_NOATIME)) : (MS_SYNCHRONOUS | MS_NOATIME), 
++		(m && m->options) ? m->options : "");
+ 
+ 	/* Requested file system type is not available in kernel,
+ 	   attempt to call mount helper. */
+@@ -911,7 +912,7 @@ static int handle_mount(const char *sour
+ 					mount_opts_len += strlen(mount_flags[i].name) + 1;
+ 
+ 			/* ... then now allocate and fill it ... */
+-			ptr = mount_opts = calloc(1, mount_opts_len);
++			ptr = mount_opts = calloc(1, (mount_opts_len + strlen("sync") + strlen("noatime") + 2));
+ 
+ 			if (!ptr) {
+ 				errno = ENOMEM;
+@@ -927,6 +928,8 @@ static int handle_mount(const char *sour
+ 				    (m->flags & (uint32_t)mount_flags[i].flag))
+ 					ptr += sprintf(ptr, "%s,", mount_flags[i].name);
+ 
++			ptr += sprintf(ptr, "%s,", "sync");
++			ptr += sprintf(ptr, "%s,", "noatime");
+ 			mount_opts[mount_opts_len - 1] = 0;
+ 		}
+ 
