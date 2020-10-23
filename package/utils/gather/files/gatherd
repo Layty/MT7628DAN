@@ -1,0 +1,47 @@
+#!/bin/sh
+# Copyright (C) 2020 Azenk
+
+report=gather_report.txt
+
+. $IPKG_INSTROOT/lib/functions.sh
+
+if [ ! -f /tmp/gather.conf ]; then
+	return
+fi
+
+function check_period() {
+	local period min 
+
+	config_load collector
+	config_get period globals period 0
+	[ "$period" -gt 0 ] || return 0
+
+	min=`date +%M`
+
+	if [ `expr $min % $period` -eq 0 ]; then
+		return 1
+	else
+		return 0
+	fi
+}
+
+if check_period
+then
+	return
+fi
+
+if grep -qs '/mnt/sda1' /proc/mounts; then
+	gather -f /tmp/gather.conf >> /mnt/sda1/dlmsniffer.log
+elif grep -qs '/mnt/sda2' /proc/mounts; then
+	gather -f /tmp/gather.conf >> /mnt/sda2/dlmsniffer.log
+elif grep -qs '/mnt/sda3' /proc/mounts; then
+	gather -f /tmp/gather.conf >> /mnt/sda3/dlmsniffer.log
+elif grep -qs '/mnt/sdb1' /proc/mounts; then
+	gather -f /tmp/gather.conf >> /mnt/sdb1/dlmsniffer.log
+elif grep -qs '/mnt/sdb2' /proc/mounts; then
+	gather -f /tmp/gather.conf >> /mnt/sdb2/dlmsniffer.log
+elif grep -qs '/mnt/sdb3' /proc/mounts; then
+	gather -f /tmp/gather.conf >> /mnt/sdb3/dlmsniffer.log
+fi
+
+

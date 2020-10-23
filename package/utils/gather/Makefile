@@ -41,15 +41,19 @@ endef
 
 define Build/Compile
 	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
+		PLAT=LINUX \
 		CC="$(TARGET_CROSS)gcc" \
 		CXX="$(TARGET_CROSS)g++"
 endef
 
 define Package/gather/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(PKG_BUILD_DIR)/gather $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/gather $(1)/usr/bin
+	$(INSTALL_BIN) ./files/gatherd $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) ./files/collector $(1)/etc/config/collector
+	$(INSTALL_CONF) ./files/collector.conf $(1)/etc/config/collector
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/collector.init $(1)/etc/init.d/collector
 endef
 
 $(eval $(call BuildPackage,gather))
