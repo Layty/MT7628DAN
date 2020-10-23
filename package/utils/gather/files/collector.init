@@ -87,6 +87,7 @@ collector_element() {
 start_service() {
 	local enabled
 
+	killall crond
 	crontab -r
 	sync
 
@@ -113,6 +114,7 @@ EOF
 	echo "* * * * * /usr/bin/gatherd" > "$DYNAMICCRONFILE"
 	crontab "$DYNAMICCRONFILE"
 	rm -f "$DYNAMICCRONFILE"
+	crond
 }
 
 start() {
@@ -121,6 +123,7 @@ start() {
 }
 
 stop() {
+	killall crond
         crontab -r
 	sync
 }
