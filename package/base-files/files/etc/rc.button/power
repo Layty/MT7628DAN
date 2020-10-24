@@ -3,7 +3,7 @@
 [ "${ACTION}" = "pressed" ] || exit 0
 
 /sbin/wifi down
-/bin/sync
+/bin/touch etc/time
 exec /sbin/poweroff
 
 return 0
