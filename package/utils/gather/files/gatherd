@@ -30,6 +30,10 @@ then
 	return
 fi
 
+if [ -f /sys/class/leds/led0/brightness ]; then
+	echo 255 >> /sys/class/leds/led0/brightness
+fi
+
 if grep -qs '/mnt/sda1' /proc/mounts; then
 	gather -f /tmp/gather.conf >> /mnt/sda1/dlmsniffer.log
 elif grep -qs '/mnt/sda2' /proc/mounts; then
@@ -44,4 +48,8 @@ elif grep -qs '/mnt/sdb3' /proc/mounts; then
 	gather -f /tmp/gather.conf >> /mnt/sdb3/dlmsniffer.log
 fi
 
+
+if [ -f /sys/class/leds/led0/brightness ]; then
+	echo 0 >> /sys/class/leds/led0/brightness
+fi
 
