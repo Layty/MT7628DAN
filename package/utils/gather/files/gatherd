@@ -1,55 +1,166 @@
 #!/bin/sh
 # Copyright (C) 2020 Azenk
 
-report=gather_report.txt
+DYNAMICCFGFILE="/tmp/gather.conf"
+REPORTFILE="/mnt/sda1/dlmsniffer.log"
+STATUSLED="/sys/class/leds/led0/brightness"
 
 . $IPKG_INSTROOT/lib/functions.sh
 
-if [ ! -f /tmp/gather.conf ]; then
-	return
-fi
-
 function check_period() {
-	local period min 
+	local period min
 
-	config_load collector
 	config_get period globals period 0
-	[ "$period" -gt 0 ] || return 0
+	if [ "$period" -le 0 ]; then
+		exit 0
+	fi
 
 	min=`date +%M`
 
-	if [ `expr $min % $period` -eq 0 ]; then
-		return 1
-	else
-		return 0
+	if [ `expr $min % $period` -ne 0 ]; then
+		exit 0
 	fi
 }
 
-if check_period
-then
-	return
+ser2net_default() {
+	local cfg="$1"
+	local key val speed="9600" databits="8" stopbits="0" parity="None"
+
+	for key in speed databits stopbits parity; do
+		config_get val "$cfg" "$key"
+		[ -n "$val" ] || continue
+		case "$key" in
+			speed) speed=$val ;;
+			databits) databits=$val ;;
+			stopbits) stopbits=$val ;;
+			parity) parity=$val ;;
+			*)
+		esac
+	done
+
+	case "$stopbits" in
+		1) stopbits=0 ;;
+		2) stopbits=2 ;;
+		*)
+	esac
+
+	case "$parity" in
+		none) parity="None" ;;
+		even) parity="Even" ;;
+		odd) parity="Odd" ;;
+		*)
+	esac
+
+	echo "device=/dev/ttyS1:$speed:$databits$parity$stopbits"
+
+	echo
+}
+
+collector_globals() {
+	local cfg="$1"
+	local key val level="0"
+
+	for key in client logical physical mode level password ekey akey; do
+		config_get val "$cfg" "$key"
+		[ -n "$val" ] || continue
+		case "$key" in
+			level) level=$val ;;
+			*) echo "$key=$val"
+		esac
+	done
+
+	case "$level" in
+		none) echo "level=0" ;;
+		low) echo "level=1" ;;
+		high) echo "level=5" ;;
+		*)
+	esac
+
+	echo
+}
+
+element_period() {
+	local delta="$1" period now last
+
+	if [ "$delta" -eq 1 ]
+	then
+		config_get period globals period 0
+
+		[ "$period" -gt 0 ] || exit 1
+
+		now=`date +%s`
+		last=`expr $now - $period \* 60`
+
+		echo "$last""-""$now"
+	else
+		echo ""
+	fi
+
+	echo
+}
+
+collector_element() {
+	local cfg="$1"
+	local key val class obis index delta
+
+	for key in class obis index delta; do
+		config_get val "$cfg" "$key" 0
+		case "$key" in
+			class) class=$val ;;
+			obis) obis=$val ;;
+			index) index=$val ;;
+			delta) delta=$(element_period $val) ;;
+			*)
+		esac
+	done
+
+	echo "element=$class $obis $index $delta"
+
+	echo
+}
+
+config_load collector
+check_period
+sleep 15
+
+if [ -f "$DYNAMICCFGFILE" ]; then
+	rm "$DYNAMICCFGFILE"
 fi
 
-if [ -f /sys/class/leds/led0/brightness ]; then
-	echo 255 >> /sys/class/leds/led0/brightness
+cat << EOF > "$DYNAMICCFGFILE"
+
+#
+# Following part is auto-generated from UCI settings in /etc/config/collector & /etc/config/ser2net
+#
+
+EOF
+
+config_load ser2net
+config_foreach ser2net_default default >> "$DYNAMICCFGFILE"
+
+config_load collector
+config_foreach collector_globals globals >> "$DYNAMICCFGFILE"
+config_foreach collector_element element >> "$DYNAMICCFGFILE"
+
+if [ -f "$STATUSLED" ]; then
+	echo 255 >> "$STATUSLED"
 fi
 
 if grep -qs '/mnt/sda1' /proc/mounts; then
-	gather -f /tmp/gather.conf >> /mnt/sda1/dlmsniffer.log
+	gather -f "$DYNAMICCFGFILE" >> "$REPORTFILE"
 elif grep -qs '/mnt/sda2' /proc/mounts; then
-	gather -f /tmp/gather.conf >> /mnt/sda2/dlmsniffer.log
+	gather -f "$DYNAMICCFGFILE" >> "$REPORTFILE"
 elif grep -qs '/mnt/sda3' /proc/mounts; then
-	gather -f /tmp/gather.conf >> /mnt/sda3/dlmsniffer.log
+	gather -f "$DYNAMICCFGFILE" >> "$REPORTFILE"
 elif grep -qs '/mnt/sdb1' /proc/mounts; then
-	gather -f /tmp/gather.conf >> /mnt/sdb1/dlmsniffer.log
+	gather -f "$DYNAMICCFGFILE" >> "$REPORTFILE"
 elif grep -qs '/mnt/sdb2' /proc/mounts; then
-	gather -f /tmp/gather.conf >> /mnt/sdb2/dlmsniffer.log
+	gather -f "$DYNAMICCFGFILE" >> "$REPORTFILE"
 elif grep -qs '/mnt/sdb3' /proc/mounts; then
-	gather -f /tmp/gather.conf >> /mnt/sdb3/dlmsniffer.log
+	gather -f "$DYNAMICCFGFILE" >> "$REPORTFILE"
 fi
 
 
-if [ -f /sys/class/leds/led0/brightness ]; then
-	echo 0 >> /sys/class/leds/led0/brightness
+if [ -f "$STATUSLED" ]; then
+	echo 0 >> "$STATUSLED"
 fi
-
