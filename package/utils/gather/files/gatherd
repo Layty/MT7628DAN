@@ -88,11 +88,11 @@ element_period() {
 		[ "$period" -gt 0 ] || exit 1
 
 		now=`date +%s`
-		last=`expr $now - $period \* 60`
+		last=`expr $now - $period \* 60 + 1`
 
 		echo "$last""-""$now"
 	else
-		echo ""
+		echo "1-1"
 	fi
 
 	echo
