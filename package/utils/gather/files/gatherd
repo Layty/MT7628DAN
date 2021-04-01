@@ -2,7 +2,6 @@
 # Copyright (C) 2020 Azenk
 
 DYNAMICCFGFILE="/tmp/gather.conf"
-REPORTFILE="/mnt/sda1/dlmsniffer.log"
 STATUSLED="/sys/class/leds/led0/brightness"
 
 . $IPKG_INSTROOT/lib/functions.sh
@@ -147,17 +146,17 @@ if [ -f "$STATUSLED" ]; then
 fi
 
 if grep -qs '/mnt/sda1' /proc/mounts; then
-	gather -f "$DYNAMICCFGFILE" >> "$REPORTFILE"
+	gather -f "$DYNAMICCFGFILE" >> "/mnt/sda1/dlmsniffer.log"
 elif grep -qs '/mnt/sda2' /proc/mounts; then
-	gather -f "$DYNAMICCFGFILE" >> "$REPORTFILE"
+	gather -f "$DYNAMICCFGFILE" >> "/mnt/sda2/dlmsniffer.log"
 elif grep -qs '/mnt/sda3' /proc/mounts; then
-	gather -f "$DYNAMICCFGFILE" >> "$REPORTFILE"
+	gather -f "$DYNAMICCFGFILE" >> "/mnt/sda3/dlmsniffer.log"
 elif grep -qs '/mnt/sdb1' /proc/mounts; then
-	gather -f "$DYNAMICCFGFILE" >> "$REPORTFILE"
+	gather -f "$DYNAMICCFGFILE" >> "/mnt/sdb1/dlmsniffer.log"
 elif grep -qs '/mnt/sdb2' /proc/mounts; then
-	gather -f "$DYNAMICCFGFILE" >> "$REPORTFILE"
+	gather -f "$DYNAMICCFGFILE" >> "/mnt/sdb2/dlmsniffer.log"
 elif grep -qs '/mnt/sdb3' /proc/mounts; then
-	gather -f "$DYNAMICCFGFILE" >> "$REPORTFILE"
+	gather -f "$DYNAMICCFGFILE" >> "/mnt/sdb3/dlmsniffer.log"
 fi
 
 
