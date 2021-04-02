@@ -113,8 +113,10 @@ collector_element() {
 		esac
 	done
 
-	echo "element=$class $obis $index $delta"
-
+	if [ $class -eq 7 ]; then
+		echo "element=$class $obis $index $delta"
+	else
+		echo "element=$class $obis $index"
 	echo
 }
 
