@@ -1,0 +1,11 @@
+--- a/development/src/GXDLMSSettings.cpp
++++ b/development/src/GXDLMSSettings.cpp
+@@ -530,6 +530,9 @@ void CGXDLMSSettings::SetIndex(unsigned short value)
+ 
+ DLMS_CONFORMANCE CGXDLMSSettings::GetNegotiatedConformance()
+ {
++    if(m_NegotiatedConformance & DLMS_CONFORMANCE_GENERAL_BLOCK_TRANSFER) {
++        return ((DLMS_CONFORMANCE)((uint32_t)m_NegotiatedConformance - (uint32_t)DLMS_CONFORMANCE_GENERAL_BLOCK_TRANSFER));
++    }
+     return m_NegotiatedConformance;
+ }
